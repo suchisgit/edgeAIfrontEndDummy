@@ -1,80 +1,210 @@
 import React, { useState } from 'react';
-import { BsPersonFill, BsThreeDotsVertical } from 'react-icons/bs';
-import { data } from '../data/data.js';
+import axios from 'axios';
 
-// type input1 ={
-//   dcokerhubImage: String
-// };
+const Homepage = () => {
+  const [selectedOption, setSelectedOption] = useState('');
 
-const homepage = () => {
-  const [dockerhubImage,setDockerhubImage] = useState({
-    dockerhubImage: ''
-  })
-
-  const submitImage = (event) => {
-    setDockerhubImage({...dockerhubImage,[event.target.dockerhubImage] : event.target.value})
-  }
-
-  function handleCreatePod(event){
-    event.preventDefault()
-    axios.post('', {post})
-    .then(reponse => console.log(respose))
-    .catch(err => console.log(err))
-  }
+  const handleDropdownChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+  //https://c1.wallpaperflare.com/preview/266/2/416/electrical-data-center-complete-sets-of-cabinet.jpg
   return (
-    <div className='bg-gray-100 min-h-screen' style={{ margin: '0 auto', textAlign: 'center' }}>
-      <div className='flex justify-between p-4'>
-        <h2>Home Page development ----in progress</h2>
+    
+    <div
+      className='min-h-screen'
+      style={{
+        margin: '0 auto',
+        textAlign: 'center',
+        backgroundImage: 'url("https://t4.ftcdn.net/jpg/02/46/11/45/360_F_246114560_O7EKssDoFwNRsuJQJ8fXn760wH9ubhnq.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+    <div className='flex justify-between p-1' style={{ color: 'white' }}>
+        <h1>Home Page</h1>
+    </div>
+    <div className='flex justify-between p-4' style={{ color: 'white' }}>
         <h2>Welcome Back, ML Guy</h2>
-        
+    </div>
+
+      
+      <select value={selectedOption} onChange={handleDropdownChange}
+      style={{
+        backgroundColor: 'white',
+        color: 'black',
+        fontSize: '20px',
+        // Add more styles as needed
+      }}
+      >
+        <option value="">Select Form</option>
+        <option value="form1">Dockerhub Image</option>
+        <option value="form3">Github</option>
+        <option value="form2">Code Files</option>
+      </select>
+
+      <div style={{ marginTop: '20px' }}>
+        {selectedOption === 'form1' && <Form1 />}
+        {selectedOption === 'form2' && <Form2 />}
+        {selectedOption === 'form3' && <Form3 />}
       </div>
-
-      <div class="input-group mb-3 w-25" style={{ margin: '0 auto', textAlign: 'center', display: 'block' }}>
-      <h4>If you have already cerated container in dockerhub</h4>
-        <div>
-          <span class="input-group-text" id="container-name">container details</span>
-          <input type="text" class="form-control" name = "dockerhubImage" value = {dockerhubImage} onChange={setDockerhubImage} placeholder="e.g, userName/containerName:tagname" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"></input>
-        </div>
-        <button type="button" class="btn btn-primary" onClick={submitImage}>create pod</button>
-      </div>
-
-      <div>
-        <div class="input-group mb-3 w-25" style={{ margin: '0 auto', textAlign: 'center', display: 'block' }}>
-          <h4>If you just have you executable command and files, please provide the following inputs </h4>
-        </div>
-
-        <div class="input-group mb-3 w-25" style={{ margin: '0 auto', textAlign: 'center', display: 'block' }}>
-          <div>
-            <span class="input-group-text" id="container-name-1">Base Image</span>
-            <input type="text" class="form-control" placeholder="e.g, Python,Node.js,Ubuntu" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"></input>          
-          </div>
-        </div>
-
-        <div class="input-group mb-3 w-25" style={{ margin: '0 auto', textAlign: 'center', display: 'block' }}>
-
-          <div>
-           {/* <span class="input-group-text" id="container-name-2">Requirements file in txt format</span> */}
-           <div class="mb-3">
-              <label for="formFile" class="form-label">input requirements.txt file</label>
-              <input class="form-control" type="file" id="formFile"></input>
-            </div>
-            {/* <input type="text" class="form-control" placeholder="add all the requirements along with version with line breaks" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"></input> */}
-          </div>
-        </div>
-
-        <div class="input-group mb-3 w-25" style={{ margin: '0 auto', textAlign: 'center', display: 'block' }}>
-          <div>
-          <span class="input-group-text" id="container-name-3">Provide startup command</span>
-          <input type="text" class="form-control" placeholder="e.g, python main.py" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"></input>
-        
-          </div>
-          
-        </div>
-        <button type="button" class="btn btn-primary" onClick="">create pod</button>
-        </div>
-      </div>
-
+    </div>
   );
 };
 
-export default homepage;
+const Form1 = () => {
+  const [dockerhubImage, setDockerhubImage] = useState('');
+
+  const submitImage = (event) => {
+    setDockerhubImage(event.target.value);
+  };
+
+  function handleCreatePod(event) {
+    event.preventDefault();
+    axios
+      .post('http://localhost:4001/dockerImageName', { DockerImage: dockerhubImage })
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          alert('Next step is to automate pod creation for the given docker container!!');
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
+  return (
+    <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px', marginTop: '30px' }}>
+      <div class="input-group mb-4 w-60" style={{ margin: '0 auto', textAlign: 'center', display: 'block' }}>
+        <h4>Dockerhub details</h4>
+      </div>
+     
+      <div>
+        <span class="input-group-text" id="container-name" style={{ width: '400px' ,  fontWeight: 'bold'}}>
+          Container details
+        </span>
+        <input
+          type="text"
+          class="form-control"
+          name="dockerhubImage"
+          value={dockerhubImage}
+          onChange={(e) => setDockerhubImage(e.target.value)}
+          placeholder="e.g, userName/containerName:tagname"
+          aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-default"
+          style={{ width: '400px' }}
+        ></input>
+      </div>
+      <button type="button" class="btn btn-primary" onClick={handleCreatePod}>
+        Create Pod
+      </button>
+    </div>
+  );
+};
+
+const Form2 = () => {
+  return (
+    <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px', marginTop: '30px' }}>
+      <div class="input-group mb-4 w-60" style={{ margin: '0 auto', textAlign: 'center', display: 'block' }}>
+        <h4>Expected input</h4>
+      </div>
+
+        <div>
+          <span class="input-group-text" id="container-name-1" style={{ width: '400px' ,  fontWeight: 'bold'}}>
+            Base Image
+          </span>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="e.g, Python, Node.js, Ubuntu"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-default"
+            style={{ width: '400px' }}
+          ></input>
+        </div>
+
+        <div>
+          <div class="mb-3">
+            <label for="formFile" class="form-label" style={{ width: '400px' ,  fontWeight: 'bold' }}>
+              requirements.txt file
+            </label>
+            <input class="form-control" type="file" id="formFile" style={{ width: '400px' }}></input>
+          </div>
+        </div>
+
+        <div>
+          <div class="mb-3">
+            <label for="formFile" class="form-label" style={{ width: '400px' ,  fontWeight: 'bold' }}>
+              soruce code(zipped format)
+            </label>
+            <input class="form-control" type="file" id="formFile" style={{ width: '400px' }}></input>
+          </div>
+        </div>
+
+        <div>
+          <span class="input-group-text" id="container-name-3" style={{ width: '400px', color: 'black',  fontWeight: 'bold' }}>
+            Startup command
+          </span>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="e.g, python main.py"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-default"
+            style={{ width: '400px' }}
+          ></input>
+        </div>
+
+      <button type="button" class="btn btn-primary" onClick="">
+        Create Pod
+      </button>
+    </div>
+  );
+};
+
+const Form3 = () => {
+  return (
+    <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px', marginTop: '30px' }}>
+      <div class="input-group mb-4 w-60" style={{ margin: '0 auto', textAlign: 'center', display: 'block' }}>
+        <h4>Github inputs</h4>
+      </div>
+
+        <div>
+          <span class="input-group-text" id="container-name-1" style={{ width: '400px' ,  fontWeight: 'bold'}}>
+            Github repository URL
+          </span>
+          <input
+            type="text"
+            class="form-control"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-default"
+            style={{ width: '400px' }}
+          ></input>
+        </div>
+
+
+        <div>
+          <span class="input-group-text" id="container-name-3" style={{ width: '400px', color: 'black',  fontWeight: 'bold' }}>
+            execution command
+          </span>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="e.g, python main.py"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-default"
+            style={{ width: '400px' }}
+          ></input>
+        </div>
+
+      <button type="button" class="btn btn-primary" onClick="">
+        Create Pod
+      </button>
+    </div>
+  );
+};
+
+export default Homepage;
