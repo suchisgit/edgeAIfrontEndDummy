@@ -41,7 +41,7 @@ const Homepage = () => {
         // Add more styles as needed
       }}
       >
-        <option value="">Select Form</option>
+        <option value="">Select Deployment Option</option>
         <option value="form1">Dockerhub Image</option>
         <option value="form3">Github</option>
         <option value="form2">Code Files</option>
@@ -166,6 +166,33 @@ const Form2 = () => {
 };
 
 const Form3 = () => {
+
+  const [gitCloneURL, setgitCloneURL] = useState('');
+  const [execCMD, setexecCMD] = useState('');
+
+  // const setGithub = {
+  //   "githubUrl": gitCloneURL,
+  //   "executionCommand": execCMD
+  // }
+  const setGithub = ''
+
+  function handleCreatePod(event) {
+    event.preventDefault();
+    axios
+      .post('http://localhost:4001/githubPodDetails', { 
+        githubUrl : gitCloneURL,
+        executionCommand: execCMD
+       })
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          alert('Next step is to automate pod creation for the given docker container!!');
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
+  
   return (
     <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px', marginTop: '30px' }}>
       <div class="input-group mb-4 w-60" style={{ margin: '0 auto', textAlign: 'center', display: 'block' }}>
@@ -182,6 +209,13 @@ const Form3 = () => {
             aria-label="Sizing example input"
             aria-describedby="inputGroup-sizing-default"
             style={{ width: '400px' }}
+            value={setGithub}
+            onChange={(e) => 
+              {
+                setgitCloneURL(e.target.value);
+                setexecCMD(e.target.value)
+              }
+            }
           ></input>
         </div>
 
@@ -200,7 +234,7 @@ const Form3 = () => {
           ></input>
         </div>
 
-      <button type="button" class="btn btn-primary" onClick="">
+      <button type="button" class="btn btn-primary" onClick={handleCreatePod}>
         Create Pod
       </button>
     </div>
